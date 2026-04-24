@@ -13,8 +13,8 @@ local options = {
 local pointData = {
 	[1] = {relFrom = "BOTTOM", relTo = "TOP", xOffset = 0, yOffset = 0},
 	[2] = {relFrom = "TOP", relTo = "BOTTOM", xOffset = 0, yOffset = 0},
-	[3] = {relFrom = "RIGHT", relTo = "LEFT", xOffset = 32, yOffset = 0},
-	[4] = {relFrom = "LEFT", relTo = "RIGHT", xOffset = -32, yOffset = 0},
+	[3] = {relFrom = "RIGHT", relTo = "LEFT", xOffset = 28, yOffset = 0},
+	[4] = {relFrom = "LEFT", relTo = "RIGHT", xOffset = -28, yOffset = 0},
 }
 
 local frameIndex = {
@@ -64,7 +64,7 @@ function M:AttachedMeters_Setup()
 				else
 					frame:SetWidth(tarOption.width)
 				end
-				frame.ResizeButton:StopMovingOrSizing() -- help to remember size and anchor
+				frame.MinimizeContainer.ResizeButton:StopMovingOrSizing() -- help to remember size and anchor
 				frame:ClearAllPoints()
 				local anchorInfo = pointData[option.attachedPoint]
 				frame:SetPoint(anchorInfo.relFrom, option.attachedTarget, anchorInfo.relTo, anchorInfo.xOffset, anchorInfo.yOffset)
