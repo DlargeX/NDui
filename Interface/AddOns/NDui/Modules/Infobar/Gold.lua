@@ -11,13 +11,14 @@ local GetMoney, Ambiguate = GetMoney, Ambiguate
 local C_Timer_After, IsControlKeyDown, IsShiftKeyDown = C_Timer.After, IsControlKeyDown, IsShiftKeyDown
 local C_CurrencyInfo_GetCurrencyInfo = C_CurrencyInfo.GetCurrencyInfo
 local C_CurrencyInfo_GetBackpackCurrencyInfo = C_CurrencyInfo.GetBackpackCurrencyInfo
-local CalculateTotalNumberOfFreeBagSlots = CalculateTotalNumberOfFreeBagSlots
+local CalculateTotalNumberOfFreeBagSlots = C_Container.CalculateTotalNumberOfFreeBagSlots
 local C_Container_UseContainerItem = C_Container.UseContainerItem
 local C_Container_GetContainerNumSlots = C_Container.GetContainerNumSlots
 local C_Container_GetContainerItemInfo = C_Container.GetContainerItemInfo
 
 local slotString = L["Bags"]..": %s%d"
 local showGoldGap = 100 * 1e4
+local maxAccounts = 30 -- max visible characters
 local TIER_CHARGE_ID = 3378 -- 12.0 S1
 
 local profit, spent, oldMoney = 0, 0, 0
@@ -179,19 +180,24 @@ info.onEnter = function(self)
 	local totalGold = 0
 	GameTooltip:AddLine(L["RealmCharacter"], .6,.8,1)
 
+	local isShiftKeyDown = IsShiftKeyDown()
+	local currentAccounts = 1
+
 	if NDuiADB["totalGold"][myRealm] then
 		for k, v in pairs(NDuiADB["totalGold"][myRealm]) do
 			local gold, class = unpack(v)
 			local name = Ambiguate(k.."-"..myRealm, "none")
 			if gold > showGoldGap or UnitIsUnit(name, "player") then
-				local r, g, b = B.ClassColor(class)
-				GameTooltip:AddDoubleLine(getClassIcon(class)..name, module:GetMoneyString(gold), r,g,b, 1,1,1)
+				if (isShiftKeyDown or currentAccounts < maxAccounts) then
+					local r, g, b = B.ClassColor(class)
+					GameTooltip:AddDoubleLine(getClassIcon(class)..name, module:GetMoneyString(gold), r,g,b, 1,1,1)
+					currentAccounts = currentAccounts + 1
+				end
 				totalGold = totalGold + gold
 			end
 		end
 	end
 
-	local isShiftKeyDown = IsShiftKeyDown()
 	for realm, data in pairs(NDuiADB["totalGold"]) do
 		if realm ~= myRealm then
 			for k, v in pairs(data) do
